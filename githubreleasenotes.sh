@@ -21,4 +21,4 @@ echo "Fetching releases from https://${host}/${organisation}/${repository}/relea
 releases=$(curl --silent --header "Authorization: token ${access_token}" "https://${host}/api/v3/repos/${organisation}/${repository}/releases")
 
 echo "Forming notes to ${outfile}"
- jq '.[] | select(.body != "") | "# "+.name+"\n["+.tag_name+"]("+.html_url+")\n> "+.published_at+"\n"+.body+"\n\n"' -r <<< "${releases}" > ${outfile}
+jq '.[] | select(.body != "") | "# "+.name+"\n["+.tag_name+"]("+.html_url+")\n> "+(.created_at | strptime("%Y-%m-%dT%TZ") | strftime("%B %-d, %Y"))+"\n"+.body+"\n\n"' -r <<< "${releases}" > "${outfile}"
